@@ -1,0 +1,72 @@
+import { defineConfig, devices } from '@playwright/test'
+import { ADMIN_STORAGE_STATE, env } from './config/env'
+
+export default defineConfig({
+    testDir: './tests',
+    outputDir: './test-results',
+
+    fullyParallel: true,
+    forbidOnly: !!process.env.CI,
+    retries: process.env.CI ? 1 : 0,
+    // One worker by default. Raise it with PLAYWRIGHT_WORKERS once the site's limits are understood.
+    // The site rate-limits (HTTP 429), and the login API allows only 10 requests per window.
+    workers: env.workers,
+
+    timeout: 60_000,
+    expect: { timeout: 15_000 },
+
+    reporter: [['list'], ['html', { open: 'never' }]],
+
+    use: {
+        baseURL: env.baseUrl,
+        actionTimeout: 15_000,
+        navigationTimeout: 30_000,
+        screenshot: 'only-on-failure',
+        trace: 'retain-on-failure',
+        // PLAYWRIGHT_SLOW_MO=400 makes a --headed run easy to follow.
+        launchOptions: { slowMo: env.slowMoMs },
+    },
+
+    projects: [
+        // Pure logic tests (no browser, no site, no login).
+        {
+            name: 'unit',
+            testMatch: /tests\/unit\/.*\.spec\.ts/,
+        },
+        // Makes sure a valid saved login session exists. Logs in only when needed.
+        {
+            name: 'setup',
+            testMatch: /auth\.setup\.ts/,
+        },
+        // Login tests: must start logged OUT.
+        {
+            name: 'auth',
+            testMatch: /tests\/auth\/.*\.spec\.ts/,
+            testIgnore: /login-extended\.spec\.ts/,
+            use: { ...devices['Desktop Chrome'] },
+        },
+        // Login edge cases that each use one of the API's 10 requests per window.
+        // Not part of `npm test`; run with `npm run test:login-extended`.
+        {
+            name: 'auth-extended',
+            testMatch: /login-extended\.spec\.ts/,
+            use: { ...devices['Desktop Chrome'] },
+        },
+        // Everything else runs as the logged-in admin, reusing the saved session.
+        {
+            name: 'admin',
+            testMatch: /tests\/(?!auth\/|unit\/|marketplace\/).*\.spec\.ts/,
+            dependencies: ['setup'],
+            use: { ...devices['Desktop Chrome'], storageState: ADMIN_STORAGE_STATE },
+        },
+        // Marketplace seller tests: they log a test seller in 4 times (the login API allows 10 requests per window)
+        // and change that seller's approval status, so they are NOT part of `npm test`.
+        // Run them with `npm run test:marketplace`.
+        {
+            name: 'marketplace',
+            testMatch: /tests\/marketplace\/.*\.spec\.ts/,
+            dependencies: ['setup'],
+            use: { ...devices['Desktop Chrome'], storageState: ADMIN_STORAGE_STATE },
+        },
+    ],
+})

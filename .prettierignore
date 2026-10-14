@@ -1,0 +1,10 @@
+node_modules
+legacy-appium
+test-results
+playwright-report
+playwright/.auth
+playwright/.rate
+screenshots
+package-lock.json
+docs
+*.md

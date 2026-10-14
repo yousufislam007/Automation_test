@@ -1,0 +1,6 @@
+# Store text files with LF line endings in Git, so Windows and macOS/Linux do not fight over line endings.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.zip binary

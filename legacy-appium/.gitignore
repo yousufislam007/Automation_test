@@ -1,0 +1,7 @@
+node_modules/
+# Private credentials (copy .env.example to .env)
+.env
+# Failure screenshots and logs
+screenshots/
+logs/
+*.log

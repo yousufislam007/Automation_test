@@ -1,0 +1,45 @@
+{
+  "name": "web-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright end-to-end tests for the EzyCourse admin dashboard",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "engines": {
+    "node": "\u003e=20"
+  },
+  "scripts": {
+    "test": "playwright test --project=unit --project=setup --project=auth --project=admin",
+    "test:unit": "playwright test --project=unit",
+    "test:login": "playwright test --project=setup --project=auth",
+    "test:login-extended": "playwright test --project=auth-extended",
+    "test:smoke": "playwright test --project=setup --project=admin --grep @smoke",
+    "test:lessons": "playwright test tests/course/lessons.spec.ts --project=setup --project=admin",
+    "test:lessons:headed": "cross-env PLAYWRIGHT_SLOW_MO=400 playwright test tests/course/lessons.spec.ts --project=setup --project=admin --headed",
+    "test:marketplace": "playwright test --project=setup --project=marketplace",
+    "test:marketplace:headed": "cross-env PLAYWRIGHT_SLOW_MO=400 playwright test --project=setup --project=marketplace --headed",
+    "test:headed": "playwright test --project=setup --project=auth --project=admin --headed",
+    "test:ui": "playwright test --ui",
+    "auth:refresh": "cross-env AUTH_REFRESH=1 playwright test --project=setup",
+    "report": "playwright show-report",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run typecheck \u0026\u0026 npm run lint \u0026\u0026 npm run format:check"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.4",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.12.1",
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.1"
+  }
+}
