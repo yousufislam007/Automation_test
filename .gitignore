@@ -7,3 +7,5 @@ playwright/.rate/
 test-results/
 playwright-report/
 screenshots/
+# Log files can contain typed values (never commit)
+*.log
