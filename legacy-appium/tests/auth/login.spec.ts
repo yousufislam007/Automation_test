@@ -20,7 +20,7 @@ describe('EzyCourse Login', () => {
         await LoginScreen.enterEmail(env.studentEmail)
         await LoginScreen.enterPassword(env.studentPassword)
 
-        await expect(LoginScreen.emailField).toHaveText(env.studentEmail)
+        await LoginScreen.expectEmailTyped(env.studentEmail)
     })
 
     it('LOGIN-03: should login successfully with valid credentials', async () => {

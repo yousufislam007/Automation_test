@@ -37,7 +37,10 @@ export default abstract class BaseScreen {
         if (await tapAndType(false)) return
         await this.clearField(getField)
         if (await tapAndType(true)) return
-        throw new Error(`Typed text did not reach the field (expected ${isPassword ? 'a masked value' : `"${text}"`})`)
+        // Never put the typed value in the message: it can be an email or a password and would end up in logs.
+        throw new Error(
+            `Typed text did not reach the ${isPassword ? 'password' : 'text'} field (the value is not shown)`
+        )
     }
 
     // Taps the lower part of a text field (where the real input is) so it gets the keyboard focus.

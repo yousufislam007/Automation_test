@@ -36,3 +36,7 @@ legacy-appium/
 - Five of the login tests send a real login request to EzyCourse (the login API allows about 10 per window): do not run the spec many times in a row.
 - The root project's lint/format/type-check ignore this folder. Use the commands here instead.
 - See `CLAUDE.md` in this folder for the conventions (Screen Objects, no locators in tests, no fixed sleeps).
+
+## Known limitations
+
+- Appium `logLevel` above `warn` (in `wdio.conf.ts`), or a `logPath` for the Appium service, would store the typed values (emails, passwords) in the logs. Keep `logLevel: 'warn'` and do not set `logPath`.

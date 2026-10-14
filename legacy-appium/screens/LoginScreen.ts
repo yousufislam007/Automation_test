@@ -60,6 +60,17 @@ class LoginScreen extends BaseScreen {
         await this.typeInto(() => this.passwordField, password, true)
     }
 
+    /**
+     * The email field holds exactly the email that was typed. If not, the error says so in plain words.
+     * It never shows the email (or the text found in the field), so nothing personal can reach the logs.
+     */
+    async expectEmailTyped(email: string) {
+        const actual = await this.emailField.getText()
+        if (actual !== email) {
+            throw new Error('The email field does not hold the email that was typed (the values are not shown)')
+        }
+    }
+
     async tapLogin() {
         await this.loginButton.click()
     }
