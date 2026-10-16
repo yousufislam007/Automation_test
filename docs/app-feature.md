@@ -7,7 +7,7 @@ Everything below was observed. "Not verified" marks what was not confirmed.
 **Rules followed:** view only (nothing saved, sent, bought, marked complete or submitted), ONE login, session kept (noReset),
 no web tests running at the same time. Personal data is masked in this file: `<student name>`, `<student email>`, `<other user>`, `<token>`.
 
-> Status: **Rounds 1-5 of 5 done** (Login, Dashboard, bottom menu, Courses tab, bundle, course open, lesson list, one lesson of each type, player tabs and menus, Profile). Still to do (separate rounds, if wanted): a **site-owner pass** (needs its own single login), the Community and Coaching tabs in depth, and the lesson types not opened yet (PPT, Survey, Multiple, Live, Downloads, Embedded, SCORM).
+> Status: **Rounds 1-5 of 5 done** (Login, Dashboard, bottom menu, Courses tab, bundle, course open, lesson list, one lesson of each type, player tabs and menus, Profile). Still to do (separate rounds, if wanted): a **site-owner pass** (needs its own single login), the Coaching tab in depth (the **Community tab was explored on 2026-10-16**, see `docs/community-feature.md`), and the lesson types not opened yet (PPT, Survey, Multiple, Live, Downloads, Embedded, SCORM).
 > Rounds 1-5 used the old student account (`VALID_*`, confirmed by the owner). **From now on the app tests use the new accounts `TEST_STUDENT_*` and `TEST_ADMIN_*`** in `legacy-appium/.env`. The screens below may show different data (courses, points, notifications) for the new student. No content was created on the live site.
 
 ## How to read the locator tables
@@ -290,6 +290,30 @@ Facts for later Event tests:
 - Appium: the red dot is invisible (use the card as the proof); the details-page back arrow is unlabeled; the pop-up hides the calendar underneath (close it first).
 
 (The owner's rule is saved in my notes: a date with a red dot always has an event or an appointment.)
+
+### Second event: a video meeting ("native meeting" in the web admin), 17 October 2026 (view only, 2026-10-16)
+The owner registered the student for a second event of the native meeting type. Only navigation was used (date cell, card, `View`, Back, the list/calendar switch). **`Join Event`, the join/countdown button, `Cancel Registration`, the bell and the calendar icons were NOT tapped.** Masked: `<EVENT 2>`, `<HOST>`.
+
+| Where | What it shows | Locators and notes |
+|---|---|---|
+| Calendar | Red dots under 16 and 17 (today, the 16th, is selected and shows the first event). | Select the day `~Saturday, October 17, 2026`. |
+| Card under the calendar | `10:00 AM - 11:00 AM` and the title | `View desc="10:00 AM - 11:00 AM\n<EVENT 2>"`; find it with `descriptionStartsWith("10:00 AM")`. |
+| Pop-up (tap the card) | Date `Saturday, October 17, 2026`, Time `10:00 AM - 11:00 AM`, Event Start `October 17, 2026 10:00 AM`, `View`, `Cancel Registration`, and a **disabled grey button `Starts in 23h 54m`** (lock and clock icon) with the text `You can join once the meeting starts`. | `Button desc="Starts in <n>h <n>m"`, **DISABLED** in the tree; the text counts down every minute (**changing**). The hint is the last line of the pop-up's big text node. |
+| Event Details (`View`) | Title, green `Registered`, `Cancel Registration`, the same **disabled** `Starts in ...` button and hint, HOSTED BY `<HOST>`, SCHEDULE with only `Local Event Time` + `Saturday, October 17, 2026` (the in-person event also had an `Event Time:` row), `Single Session`, the two unlabeled round icons (bell, calendar), DURATION `Local Event Duration:` `10:00 AM - 11:00 AM`, EVENT DETAILS `Event Type:` **`Video meeting`** (camera icon, no location row), ABOUT EVENT with one paragraph. | The back arrow has no label (use the phone Back key or Appium `back`). Countdown button: `descriptionStartsWith("Starts in")`, enabled=false. |
+| **List view** (top-right icon on the calendar screen) | One card per event of the month. Card 1: `Friday, October 2026`, the title, a `Local Timezone` and an `Event Timezone` block (Start Date and End Date as `dd-mm-yyyy`, Time), `Description`, buttons `View Event` and `Cancel Registration`. Card 2 (video meeting): `Saturday, October 2026`, the title, ONE block (Start Date 17-10-2026, End Date 17-10-2026, Time 10:00 AM - 11:00 AM), `Description`, buttons **`View Event`, `Join Event`, `Cancel Registration`**. | Each card is one text node, not clickable (`descriptionStartsWith("Saturday, October")`). Buttons: `~View Event` (2 matches), `~Join Event` (1, only on the video meeting), `~Cancel Registration` (2). The top-right icon switches back to the calendar (restored after the look). |
+
+**Possible bugs (each seen twice: on the first look and again after leaving and reopening the screen):**
+
+| # | Where | What | Steps to see it |
+|---|---|---|---|
+| E1 | Events, list view | **`Join Event` is enabled and clickable about 24 hours before the meeting starts**, while the pop-up and the Event Details page show the join button **disabled** ("Starts in ...", "You can join once the meeting starts"). What a tap does was NOT tested (it may only show a message). | Profile > Appointments & Events > list icon (top right) > the video meeting card: `~Join Event` enabled=true, clickable=true. Compare: calendar > tap the date 17 > the card: `Starts in ...` is DISABLED. |
+| E2 | Events, list view | The day headers have **no day number**: `Friday, October 2026`, `Saturday, October 2026` (the calendar and the pop-up show "Saturday, October 17, 2026"). | Same screen, both cards. |
+
+**Differences to confirm with the owner (probably not bugs):**
+- The list card's `Description` text is **different** from the Event Details `ABOUT EVENT` text, for both events (maybe two fields: a short and a long description).
+- The in-person event shows two time blocks (Local Timezone and Event Timezone); the video meeting shows one.
+
+**For later Join tests:** joining opens at the meeting start (17 October 2026, 10:00 AM local time). Before that the pop-up and the details page show a disabled countdown, so a Join test has to run inside the meeting window. Joining will probably open the native meeting room and may ask for camera and microphone permission (not seen). Clarify E1 first.
 
 ## 1. Login screen
 **How to get there:** first screen of a fresh install or after app data is cleared. (A saved session goes straight to the Dashboard.)
