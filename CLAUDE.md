@@ -61,7 +61,7 @@ Then `npm install` and `npx playwright install chromium`.
 - `tests/unit/` -> tests for the rate-limit utilities
 - `utils/` -> `auth.ts` (check/save/refresh the saved session), `rate-limit.ts` (Retry-After, jittered back-off),
   `shared-limiter.ts` (request spacing shared across workers), `test-data.ts` (`uniqueName()`)
-- `docs/` -> `project-summary.md`, `web-sitemap.md`, `course-feature.md`, `marketplace-feature.md`, `community-feature.md`
+- `docs/` -> `project-summary.md`, `web-sitemap.md`, `course-feature.md`, `marketplace-feature.md`, `community-feature.md`, `coaching-feature.md`
 - `legacy-appium/` -> Android app tests (Appium + WebdriverIO), self-contained with its own `package.json` and `.env`. Not part of `npm test`; run from inside that folder (see its `README.md`)
 
 ## Authentication (how sessions work)

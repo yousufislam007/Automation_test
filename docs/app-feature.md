@@ -7,7 +7,7 @@ Everything below was observed. "Not verified" marks what was not confirmed.
 **Rules followed:** view only (nothing saved, sent, bought, marked complete or submitted), ONE login, session kept (noReset),
 no web tests running at the same time. Personal data is masked in this file: `<student name>`, `<student email>`, `<other user>`, `<token>`.
 
-> Status: **Rounds 1-5 of 5 done** (Login, Dashboard, bottom menu, Courses tab, bundle, course open, lesson list, one lesson of each type, player tabs and menus, Profile). Still to do (separate rounds, if wanted): a **site-owner pass** (needs its own single login), the Coaching tab in depth (the **Community tab was explored on 2026-10-16**, see `docs/community-feature.md`), and the lesson types not opened yet (PPT, Survey, Multiple, Live, Downloads, Embedded, SCORM).
+> Status: **Rounds 1-5 of 5 done** (Login, Dashboard, bottom menu, Courses tab, bundle, course open, lesson list, one lesson of each type, player tabs and menus, Profile). Still to do (separate rounds, if wanted): a **site-owner pass** (needs its own single login), (the **Community and Coaching tabs were explored on 2026-10-16/19**, see `docs/community-feature.md` and `docs/coaching-feature.md`), and the lesson types not opened yet (PPT, Survey, Multiple, Live, Downloads, Embedded, SCORM).
 > Rounds 1-5 used the old student account (`VALID_*`, confirmed by the owner). **From now on the app tests use the new accounts `TEST_STUDENT_*` and `TEST_ADMIN_*`** in `legacy-appium/.env`. The screens below may show different data (courses, points, notifications) for the new student. No content was created on the live site.
 
 ## How to read the locator tables
