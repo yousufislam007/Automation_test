@@ -1,5 +1,4 @@
 node_modules
-legacy-appium
 test-results
 playwright-report
 playwright/.auth

@@ -11,7 +11,6 @@ const LOCATOR_METHODS = 'locator|getByRole|getByText|getByLabel|getByPlaceholder
 export default defineConfig([
     globalIgnores([
         'node_modules/**',
-        'legacy-appium/**',
         'playwright-report/**',
         'test-results/**',
         'playwright/.auth/**',

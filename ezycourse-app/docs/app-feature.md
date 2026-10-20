@@ -7,8 +7,8 @@ Everything below was observed. "Not verified" marks what was not confirmed.
 **Rules followed:** view only (nothing saved, sent, bought, marked complete or submitted), ONE login, session kept (noReset),
 no web tests running at the same time. Personal data is masked in this file: `<student name>`, `<student email>`, `<other user>`, `<token>`.
 
-> Status: **Rounds 1-5 of 5 done** (Login, Dashboard, bottom menu, Courses tab, bundle, course open, lesson list, one lesson of each type, player tabs and menus, Profile). Still to do (separate rounds, if wanted): a **site-owner pass** (needs its own single login), (the **Community and Coaching tabs were explored on 2026-10-16/19**, see `docs/community-feature.md` and `docs/coaching-feature.md`), and the lesson types not opened yet (PPT, Survey, Multiple, Live, Downloads, Embedded, SCORM).
-> Rounds 1-5 used the old student account (`VALID_*`, confirmed by the owner). **From now on the app tests use the new accounts `TEST_STUDENT_*` and `TEST_ADMIN_*`** in `legacy-appium/.env`. The screens below may show different data (courses, points, notifications) for the new student. No content was created on the live site.
+> Status: **Rounds 1-5 of 5 done** (Login, Dashboard, bottom menu, Courses tab, bundle, course open, lesson list, one lesson of each type, player tabs and menus, Profile). Still to do (separate rounds, if wanted): a **site-owner pass** (needs its own single login), (the **Community and Coaching tabs were explored on 2026-10-16/19**, see `ezycourse-web/docs/community-feature.md` and `ezycourse-web/docs/coaching-feature.md`), and the lesson types not opened yet (PPT, Survey, Multiple, Live, Downloads, Embedded, SCORM).
+> Rounds 1-5 used the old student account (`VALID_*`, confirmed by the owner). **From now on the app tests use the new accounts `TEST_STUDENT_*` and `TEST_ADMIN_*`** in `ezycourse-app/.env`. The screens below may show different data (courses, points, notifications) for the new student. No content was created on the live site.
 
 ## How to read the locator tables
 - "Best locator" order: accessibility id (`~text`) > UiAutomator (`ui:`) > XPath (last resort). `instance(n)` is avoided.
@@ -52,9 +52,9 @@ A few minutes after the first check the Courses tab loaded without any change on
 | Search | typing "Linux" does **not** filter by itself (all 3 stay, also after 10 s); **pressing Enter** filters to "Master Linux..." only (seen 2x). Ask the owner whether live filtering was intended. |
 
 ## Automated tests: Courses tab (`tests/courses/courses.spec.ts`)
-Run with `npm run test:courses` (from `legacy-appium/`). ONE login for the whole file.
+Run with `npm run test:courses` (from `ezycourse-app/`). ONE login for the whole file.
 
-> **Changed after the new APK (different credentials, courses and users):** the tests no longer contain any fixed course names. They read two names from `legacy-appium/.env` (`config/env.ts`): `COURSE_NAME` (a course the student is enrolled in) and `BUNDLE_COURSE_NAME` (a bundle the student owns). The spec stops before the login if either is empty. `test-data/courses.ts` now only holds the two names a student cannot see (`notEnrolled`, `draft`). No test message prints a course name. **Not run yet with the new data.** The table below shows the first run, which used the old test student; its course names and the old category lists no longer apply.
+> **Changed after the new APK (different credentials, courses and users):** the tests no longer contain any fixed course names. They read two names from `ezycourse-app/.env` (`config/env.ts`): `COURSE_NAME` (a course the student is enrolled in) and `BUNDLE_COURSE_NAME` (a bundle the student owns). The spec stops before the login if either is empty. `test-data/courses.ts` now only holds the two names a student cannot see (`notEnrolled`, `draft`). No test message prints a course name. **Not run yet with the new data.** The table below shows the first run, which used the old test student; its course names and the old category lists no longer apply.
 
 | ID | Check (current version) | First run, old student (2026-10-12) |
 |---|---|---|
@@ -331,7 +331,7 @@ The owner registered the student for a second event of the native meeting type. 
 | Terms of Use / Privacy Policy | `~Terms of Use`, `~Privacy Policy` | page source | Buttons. Not opened. |
 
 **What the user can do:** type email and password, show/hide password, tick Remember me, log in, open Terms / Privacy.
-**Hidden from Appium:** the eye icon (no label); the validation messages (they are appended to the email `hint` and to the PASSWORD description, see `legacy-appium/CLAUDE.md`).
+**Hidden from Appium:** the eye icon (no label); the validation messages (they are appended to the email `hint` and to the PASSWORD description, see `ezycourse-app/CLAUDE.md`).
 **Typing needs the Flutter workaround** (`BaseScreen.typeInto`): tap the lower part of the field, then `mobile: type`, then read back.
 **Stable text:** Welcome back, Login to your account, Login, Remember me. **Changing:** the version label.
 **Login result:** a successful login lands on the Dashboard (Home tab) after a few seconds. Used 1 login request for this whole exploration.

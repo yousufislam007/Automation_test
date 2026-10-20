@@ -3,7 +3,7 @@ import 'dotenv/config'
 function required(name: string, hint = 'Copy .env.example to .env and fill it in.'): string {
     const value = process.env[name]?.trim()
     if (!value) {
-        throw new Error(`${name} is missing or empty in legacy-appium/.env. ${hint}`)
+        throw new Error(`${name} is missing or empty in ezycourse-app/.env. ${hint}`)
     }
     return value
 }

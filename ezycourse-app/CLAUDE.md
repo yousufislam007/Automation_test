@@ -1,6 +1,6 @@
 # Project: Android App Automation (EzyCourse app)
 
-Self-contained project inside the `app-automation` repo: run every command from this folder (`legacy-appium/`).
+Self-contained project inside the `app-automation` repo: run every command from this folder (`ezycourse-app/`).
 The Playwright web project in the parent folder is separate; its lint/format/type-check ignore this folder.
 
 ## Stack

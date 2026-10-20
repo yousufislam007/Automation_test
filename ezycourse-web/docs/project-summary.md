@@ -25,7 +25,7 @@ Tools, in plain words:
 | **Node.js** | Lets you run JavaScript/TypeScript programs on your computer |
 | **TypeScript** | The programming language the tests are written in (`.ts` files) |
 | **Playwright** | The tool that controls a real browser (Chrome) for the website tests |
-| **Appium + WebdriverIO** | The tools that controlled the Android app (old project, now in `legacy-appium/`) |
+| **Appium + WebdriverIO** | The tools that controlled the Android app (old project, now in `ezycourse-app/`) |
 | **npm** | Runs the commands in `package.json` (for example `npm test`) |
 
 ---
@@ -42,7 +42,7 @@ Tools, in plain words:
 - Wrote real checks, for example: wrong password shows "Invalid credentials"; empty email shows "Please enter your email"; a good login shows "Welcome to EzyCourse".
 
 **The hard part:** the app is built with Flutter. Normal typing did not reach the app (the app then said the field was empty), and the password field was a "wrapper" around the real input. I found this by looking at the screen and the page source, and fixed it by tapping the right spot and typing with real key presses.
-**Result:** 12 of 12 tests passed. This project is now saved in `legacy-appium/` (not deleted).
+**Result:** 12 of 12 tests passed. This project is now saved in `ezycourse-app/` (not deleted).
 
 ### Phase 2: Looking at the website
 You gave me the website and an admin login. I used a real browser (Chrome without a window) to log in and **open all 113 admin pages, read-only** (no clicking, no changes).
@@ -51,7 +51,7 @@ Things noticed: a missing image (`/img/man.jpg`, error 404) on 92 pages, some in
 
 ### Phase 3: Switching to Playwright for the website
 You said: "from now I want to test on web". So I:
-- Installed **Playwright**, moved the Android project to `legacy-appium/`, and removed its packages.
+- Installed **Playwright**, moved the Android project to `ezycourse-app/`, and removed its packages.
 - Created the web structure: `config/`, `pages/`, `tests/`, `playwright.config.ts`.
 - Wrote **login tests** (wrong password, empty fields, Enter key, show/hide password, and more) after checking how the site really behaves.
 - Wrote a **smoke test**: it opens all 113 admin pages and checks that each one loads, has the right path and title.
@@ -128,7 +128,7 @@ app-automation/
 │   └─ .auth/                   PRIVATE saved logins (git-ignored)
 ├─ utils/               Helper code: saved login, 429 retry, request spacing, unique names
 ├─ docs/                What we learned: web-sitemap, course-feature, marketplace-feature, this file
-├─ legacy-appium/       The old Android project (not used any more)
+├─ ezycourse-app/       The old Android project (not used any more)
 ├─ test-results/        Created after a run: screenshots and traces of failures
 └─ playwright-report/   Created after a run: the HTML report
 ```

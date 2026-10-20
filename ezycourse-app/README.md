@@ -17,7 +17,7 @@ Before finishing any change run `npm run check` (type-check + lint + format chec
 ## Folder map
 
 ```
-legacy-appium/
+ezycourse-app/
 ├─ wdio.conf.ts         Runner settings (specs, Appium service, timeouts, screenshot on failure)
 ├─ package.json         Commands (npm test, npm run check ...) and packages
 ├─ tsconfig.json        TypeScript settings
