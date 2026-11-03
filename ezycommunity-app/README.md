@@ -1,7 +1,15 @@
 # EzyCommunity Android app tests
 
-Not set up yet. This folder is reserved for the Android app tests of EzyCommunity (package `com.ezycommunity.android`).
+Appium + WebdriverIO + TypeScript tests for the EzyCommunity Android app (package `com.ezycommunity.android`).
+Self-contained: install and run from this folder.
+Status: scaffold (project files, `.env`, one launch smoke test). The app is not explored yet.
 
-When you start it, use `../ezycourse-app/` as the model (Appium + WebdriverIO + TypeScript, screen objects, one `.env`) and add here:
-- `package.json`, `tsconfig.json`, `wdio.conf.ts`, `.env.example`
-- `CLAUDE.md` with this project's rules (app package, test accounts, device setup)
+## Quick start
+
+1. `npm install`
+2. Connect the phone with USB debugging allowed (`adb devices -l` shows `device`), or start an emulator.
+3. Fill in `.env` (copy of `.env.example`): member and admin accounts. The device settings are already there.
+4. `npm run test:smoke`
+5. Before finishing a change: `npm run check`
+
+Read `CLAUDE.md` for the structure, rules and limits. The web tests are in `../ezycommunity-web/`.

@@ -1,0 +1,41 @@
+{
+  "name": "ezycommunity-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright end-to-end tests for the EzyCommunity web site",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "playwright test --project=unit --project=public",
+    "test:unit": "playwright test --project=unit",
+    "test:admin": "playwright test --project=setup --project=admin",
+    "test:member": "playwright test --project=setup --project=member",
+    "auth:refresh": "cross-env AUTH_REFRESH=1 playwright test --project=setup",
+    "test:smoke": "playwright test --project=public --grep @smoke",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run typecheck && npm run lint && npm run format:check"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.4",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.12.1",
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.1"
+  }
+}

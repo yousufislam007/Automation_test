@@ -1,7 +1,14 @@
 # EzyCommunity web tests
 
-Not set up yet. This folder is reserved for the browser tests of the EzyCommunity web site.
+Playwright + TypeScript tests for the EzyCommunity web site. Self-contained: install and run from this folder.
+Status: scaffold (project files, `.env`, one start-page smoke test). The site is not mapped yet.
 
-When you start it, use `../ezycourse-web/` as the model (Playwright + TypeScript, Page Objects, one `.env`, saved login session) and add here:
-- `package.json`, `tsconfig.json`, `playwright.config.ts`, `.env.example`
-- `CLAUDE.md` with this project's rules (site address, test accounts, rate limits)
+## Quick start
+
+1. `npm install`
+2. `npx playwright install chromium`
+3. Fill in `.env` (copy of `.env.example`): `WEB_BASE_URL` and the admin and member accounts.
+4. `npm run test:smoke`
+5. Before finishing a change: `npm run check`
+
+Read `CLAUDE.md` for the structure, rules and next steps. The Android app tests are in `../ezycommunity-app/`.

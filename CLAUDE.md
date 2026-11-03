@@ -6,8 +6,8 @@ This repository holds four separate test projects. **Work inside one project fol
 | --- | --- | --- |
 | `ezycourse-web/` | EzyCourse admin dashboard (Playwright + TypeScript) | `ezycourse-web/CLAUDE.md` |
 | `ezycourse-app/` | EzyCourse Android app (Appium + WebdriverIO) | `ezycourse-app/CLAUDE.md` |
-| `ezycommunity-web/` | EzyCommunity web, not set up yet | `ezycommunity-web/README.md` |
-| `ezycommunity-app/` | EzyCommunity Android app, not set up yet | `ezycommunity-app/README.md` |
+| `ezycommunity-web/` | EzyCommunity web (Playwright + TypeScript), scaffold only | `ezycommunity-web/CLAUDE.md` |
+| `ezycommunity-app/` | EzyCommunity Android app (Appium + WebdriverIO), scaffold only | `ezycommunity-app/CLAUDE.md` |
 
 ## Rules for the whole repo
 - Each project has its own `package.json`, `node_modules`, `.env` and commands. Run commands from inside the project folder, not from the repo root.

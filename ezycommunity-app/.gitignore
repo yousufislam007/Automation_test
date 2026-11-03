@@ -1,0 +1,9 @@
+node_modules/
+# Private credentials (copy .env.example to .env)
+.env
+# Failure screenshots and logs
+screenshots/
+logs/
+*.log
+# Log of real login requests, used to stay under the rate limit
+.rate/

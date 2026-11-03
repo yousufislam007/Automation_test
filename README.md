@@ -6,8 +6,8 @@ One repository, four independent projects. Each folder has its own `README.md`, 
 | --- | --- | --- | --- |
 | [`ezycourse-web/`](ezycourse-web/) | EzyCourse admin dashboard in the browser | Playwright + TypeScript | In use |
 | [`ezycourse-app/`](ezycourse-app/) | EzyCourse Android app (also the white-label apps built from it, for example Mindspectrum) | Appium + WebdriverIO + TypeScript | In use |
-| [`ezycommunity-web/`](ezycommunity-web/) | EzyCommunity web | not set up yet | Empty (README only) |
-| [`ezycommunity-app/`](ezycommunity-app/) | EzyCommunity Android app | not set up yet | Empty (README only) |
+| [`ezycommunity-web/`](ezycommunity-web/) | EzyCommunity web | Playwright + TypeScript | Scaffold (env, config, smoke test) |
+| [`ezycommunity-app/`](ezycommunity-app/) | EzyCommunity Android app | Appium + WebdriverIO + TypeScript | Scaffold (env, config, smoke test) |
 
 ## Rules for the whole repo
 - Never commit `.env` files, login sessions (`playwright/.auth/`) or log files (`.gitignore` covers them).
