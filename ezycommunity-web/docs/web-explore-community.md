@@ -1,5 +1,7 @@
 # Web explore: community pages (additions), header menus, composer, post menus, channels, courses editor, library, get-started, profile, public
 
+> **Correction (2026-11-05):** the member profile-question filter buttons DO work (they open a popover with "starts with", a value input and a disabled Apply); see web-explore-community-b.md. Hydrogen showing no lock banner was seen twice, /privacy and /terms showing the app shell twice, profile-menu Billing going to /dashboard/billing twice.
+
 Site https://sqa.ezycommunity.pro.bd, explored 2026-11-04 as logged-in admin "Team SQA" through the shared CDP browser, view only. `/api/auth/me` returned 200, no 429, no login attempts. This file only adds what `web-explore-feed-courses.md` and `web-explore-events-admin.md` do not cover. Personal data is masked. Note: other testers post live (testerA, testerQA Auto) while exploring, so feed contents, times and counts change by the minute (the tab title shows an unread prefix, for example "(9+) Feed | SQA Team" and "(1) Code").
 
 ## 1. Header and global UI
