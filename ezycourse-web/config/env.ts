@@ -35,11 +35,12 @@ function wholeNumber(name: string, fallback: number, min = 0): number {
 }
 
 function baseUrl(): string {
-    const raw = required('WEB_BASE_URL')
+    // WEB_URL is the name now used in .env; WEB_BASE_URL is still accepted.
+    const raw = optional('WEB_BASE_URL') ?? required('WEB_URL')
     try {
         new URL(raw)
     } catch {
-        throw new Error(`WEB_BASE_URL is not a valid URL (got "${raw}"). Example: https://yourschool.ezycourse.com`)
+        throw new Error(`WEB_URL is not a valid URL (got "${raw}"). Example: https://yourschool.ezycourse.com`)
     }
     return raw.replace(/\/+$/, '')
 }
@@ -57,6 +58,10 @@ export const env = {
     },
     get adminPassword() {
         return required('WEB_ADMIN_PASSWORD')
+    },
+    /** Student account 1 to 4 (STUDENT_<n>_EMAIL / STUDENT_<n>_PASSWORD in .env). Never print the values. */
+    student(slot: 1 | 2 | 3 | 4): Account {
+        return { email: required(`STUDENT_${slot}_EMAIL`), password: required(`STUDENT_${slot}_PASSWORD`) }
     },
 
     workers,
@@ -98,6 +103,9 @@ export function sellerAccount(): Account & { name: string } {
     }
     return { email, password, name: optional('QA_SELLER_NAME') ?? 'QA Seller' }
 }
+
+/** Saved login session of student account 1 to 4 (created by the meeting discovery / setup step, git-ignored). */
+export const studentStorageState = (slot: 1 | 2 | 3 | 4) => storageStatePath(`student-${slot}`)
 
 /** The primary admin session, shared by independent read-only tests. */
 export const ADMIN_STORAGE_STATE = storageStatePath('admin')

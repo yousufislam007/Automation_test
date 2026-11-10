@@ -18,6 +18,7 @@
     "test:lessons:headed": "cross-env PLAYWRIGHT_SLOW_MO=400 playwright test tests/course/lessons.spec.ts --project=setup --project=admin --headed",
     "test:marketplace": "playwright test --project=setup --project=marketplace",
     "test:marketplace:headed": "cross-env PLAYWRIGHT_SLOW_MO=400 playwright test --project=setup --project=marketplace --headed",
+    "test:meeting-harness": "playwright test --project=meeting tests/meeting/harness.spec.ts",
     "test:headed": "playwright test --project=setup --project=auth --project=admin --headed",
     "test:ui": "playwright test --ui",
     "auth:refresh": "cross-env AUTH_REFRESH=1 playwright test --project=setup",

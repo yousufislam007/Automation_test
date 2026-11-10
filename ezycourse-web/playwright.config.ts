@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 import { ADMIN_STORAGE_STATE, env } from './config/env'
+import { FAKE_MEDIA_ARGS } from './utils/media'
 
 export default defineConfig({
     testDir: './tests',
@@ -55,9 +56,16 @@ export default defineConfig({
         // Everything else runs as the logged-in admin, reusing the saved session.
         {
             name: 'admin',
-            testMatch: /tests\/(?!auth\/|unit\/|marketplace\/).*\.spec\.ts/,
+            testMatch: /tests\/(?!auth\/|unit\/|marketplace\/|meeting\/).*\.spec\.ts/,
             dependencies: ['setup'],
             use: { ...devices['Desktop Chrome'], storageState: ADMIN_STORAGE_STATE },
+        },
+        // Meeting tests: Chromium with a fake camera and microphone, several people side by side.
+        // Not part of `npm test`. Needs saved sessions for the host and students (see playwright/meeting-fixtures.ts).
+        {
+            name: 'meeting',
+            testMatch: /tests\/meeting\/.*\.spec\.ts/,
+            use: { ...devices['Desktop Chrome'], launchOptions: { args: FAKE_MEDIA_ARGS, slowMo: env.slowMoMs } },
         },
         // Marketplace seller tests: they log a test seller in 4 times (the login API allows 10 requests per window)
         // and change that seller's approval status, so they are NOT part of `npm test`.

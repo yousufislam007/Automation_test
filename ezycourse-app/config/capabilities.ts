@@ -12,6 +12,8 @@ export const androidCapabilities = {
     'appium:appPackage': setting('APP_PACKAGE', 'com.ezycourse.ezycourse'),
     'appium:appActivity': setting('APP_ACTIVITY', '.EzyAudioServiceActivity'),
     'appium:autoGrantPermissions': true,
+    // APP_NO_RESET=1 keeps the app data, so the login is reused (the login tests need the default: a clean app each time).
+    'appium:noReset': process.env.APP_NO_RESET === '1',
     // The Flutter Dashboard is always animating; waiting for "idle" makes the
     // UiAutomator2 server hang or crash.
     'appium:disableWindowAnimation': true,
