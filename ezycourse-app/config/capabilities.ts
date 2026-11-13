@@ -18,4 +18,11 @@ export const androidCapabilities = {
     // UiAutomator2 server hang or crash.
     'appium:disableWindowAnimation': true,
     'appium:waitForIdleTimeout': 0,
+    // Fast session start: the UiAutomator2 helper apps are already on the device, so do not re-check or re-push
+    // them on every session (saves 5-10 s). Set APP_FULL_INIT=1 once after an appium-uiautomator2-driver upgrade
+    // or on a new phone/emulator, so the helpers get (re)installed.
+    'appium:skipServerInstallation': process.env.APP_FULL_INIT !== '1',
+    'appium:skipDeviceInitialization': process.env.APP_FULL_INIT !== '1',
+    // Keep a session alive while a test waits on a slow screen (seconds).
+    'appium:newCommandTimeout': 300,
 }

@@ -1,7 +1,7 @@
 # Project: Android App Automation (EzyCommunity app)
 
 Self-contained project: run every command from this folder (`ezycommunity-app/`).
-Modeled on `../ezycourse-app/` (same tools and rules). Status: **scaffold** (launch smoke test, saved-login and login-budget machinery); the app is not explored yet.
+Modeled on `../ezycourse-app/` (same tools and rules). Status: **scaffold** (launch smoke test, saved-login and login-budget machinery). Explored view-only as admin (`docs/app-explore.md`, 2026-11-03) and as member (`docs/app-explore-member.md`, 2026-11-13): read both before writing screens or tests.
 
 ## The one community (owner's rule)
 
@@ -22,10 +22,22 @@ Before anything that creates, changes, deletes or sends something, first check o
 | --------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | `npm test`                                                            | All specs (starts Appium itself; the device must be connected)        |
 | `npm run test:smoke`                                                  | The launch spec (LAUNCH-01): no login                                 |
+| `npm run test:watch`                                                  | **While writing tests:** keeps the WDIO worker and the Appium session open and re-runs a spec when you save it (about 5 s per re-run instead of 12 s). Add `--spec <file>` to watch one spec |
+| `npm run appium`                                                      | **Fast runs:** keep one Appium server running in its own terminal; every `wdio run` then reuses it (about 10 s less per run) |
 | `npm run check`                                                       | **Run before finishing any change:** type-check + lint + format check |
 | `npm run typecheck` / `lint` / `lint:fix` / `format` / `format:check` | The single checks, and the fixers                                     |
 
 Check the phone is connected: `adb devices -l` must show `device` (not `unauthorized`).
+
+### Speed rules (keep runs short)
+
+- Start `npm run appium` once and leave it running; `wdio.conf.ts` detects the listening port and skips starting its own server.
+- Sessions start with `skipServerInstallation` + `skipDeviceInitialization` (about 4 s instead of 10+ s). After an `appium-uiautomator2-driver` upgrade or on a new phone run once with `APP_FULL_INIT=1` so the helper apps get installed again.
+- Reset the app between tests with `relaunchApp()` (kill + relaunch, 2-3 s, login kept), NOT `browser.reloadSession()` (10-15 s).
+- Ask "is X on screen?" with `isShownSoon()` (3 s, answers false) instead of `waitForDisplayed` with the full 15 s timeout; keep the long wait for things that must appear.
+- One Appium session per spec file; do not open a session per test.
+- While iterating on a spec use `npm run test:watch -- --spec <file>`; a normal `wdio run` costs about 12 s even for a 2 s test (WDIO boot ~6 s + session ~4 s, both fixed).
+- Measured 2026-11-13: session start 3.7 s is the UiAutomator2 floor (instrumentation alone 2.1 s); `relaunchApp()` 0.8 s; `autoGrantPermissions`, `disableWindowAnimation` and logcat capture change nothing measurable, so they stay on.
 
 ## Setup
 
@@ -51,7 +63,7 @@ Then `npm install`, connect the device, run a test.
   from `@wdio/globals` or calls `browser.$()`. Put the locator, or a method that uses it, in a screen under `screens/`.
 - Locator priority: accessibility id (`~id`) > resource-id > UiAutomator > XPath (last resort).
 - Never use fixed sleeps (`browser.pause` fails the lint). Use explicit waits (`waitForDisplayed`, `waitUntil`).
-- Every test must be independent and start from a known app state (`browser.reloadSession()` in `beforeEach`).
+- Every test must be independent and start from a known app state: `await screen.relaunchApp()` in `beforeEach` (fast; the saved login stays). Use `browser.reloadSession()` only when a test really needs a fresh Appium session.
 - Use clear test names with a unique ID: "LAUNCH-01: should start the app".
 - Do not hardcode credentials. Read them from `.env`. Never print them.
 - Only the community `https://sqa.ezycommunity.pro.bd`: confirm it before every destructive change; never switch community without the owner's permission.
@@ -65,7 +77,7 @@ Not measured yet. Assume the same login limit as EzyCourse: about 10 login reque
 - **The saved login lives in the app:** `appium:noReset` is on by default (`APP_NO_RESET=0` starts clean), so one login is reused by later sessions. Log in once per task; never retry a failed login.
 - **Login budget:** a screen's `login()` must call `this.beforeRealLogin()` right before a REAL login request (not before client-side validation errors). It refuses when `LOGIN_BUDGET_MAX` (8) logins
   were sent in the last `LOGIN_BUDGET_WINDOW_MIN` (15) minutes or the last one was rate limited; call `this.afterLoginRateLimited()` when the app shows "Too many requests".
-- Note: `browser.reloadSession()` in `beforeEach` keeps the login only while `noReset` is on.
+- Note: `relaunchApp()` and `browser.reloadSession()` keep the login only while `noReset` is on.
 
 ## Open questions
 

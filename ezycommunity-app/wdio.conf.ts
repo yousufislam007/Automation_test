@@ -1,5 +1,11 @@
 import { androidCapabilities } from './config/capabilities'
+import { APPIUM_PORT, appiumIsRunning } from './utils/appium-server'
 import { saveFailureScreenshot } from './utils/screenshot'
+
+// Appium server: when one is already listening (start it once with `npm run appium`), reuse it and skip the
+// 8-10 s start/stop of a fresh server on every run. Otherwise the appium service starts one for this run.
+const reuseRunningAppium = appiumIsRunning()
+if (reuseRunningAppium) console.info(`Reusing the Appium server on port ${APPIUM_PORT}`)
 
 export const config: WebdriverIO.Config = {
     runner: 'local',
@@ -9,13 +15,15 @@ export const config: WebdriverIO.Config = {
     maxInstances: 1,
 
     hostname: '127.0.0.1',
-    port: 4723,
+    port: APPIUM_PORT,
     path: '/',
 
-    // Starts and stops the Appium server for us.
+    // Starts and stops the Appium server for us (unless one is already running, see above).
     // Uses the Appium installed in this project's devDependencies.
     // allowInsecure lets "mobile: shell" run adb commands (typing fallback).
-    services: [['appium', { args: { allowInsecure: 'uiautomator2:adb_shell' } }]],
+    services: reuseRunningAppium
+        ? []
+        : [['appium', { args: { port: APPIUM_PORT, allowInsecure: 'uiautomator2:adb_shell' } }]],
 
     capabilities: [androidCapabilities],
 

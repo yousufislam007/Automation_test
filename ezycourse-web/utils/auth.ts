@@ -1,4 +1,4 @@
-import { mkdirSync, renameSync, existsSync } from 'node:fs'
+import { mkdirSync, renameSync, existsSync, statSync } from 'node:fs'
 import { dirname } from 'node:path'
 import type { Browser } from '@playwright/test'
 import { env, type Account } from '../config/env'
@@ -86,8 +86,17 @@ export async function ensureAuthenticated(
         await loginAndSave(browser, account, statePath)
         return 'logged-in-missing'
     }
+    // The file is rewritten on every successful check, so its age says when the session was last seen valid.
+    if (isFresh(statePath)) return 'reused'
     if ((await checkSession(browser, statePath)) === 'valid') return 'reused'
 
     await loginAndSave(browser, account, statePath)
     return 'logged-in-expired'
+}
+
+/** True when the saved session was checked or created less than env.authTrustMinutes ago (0 disables this). */
+export function isFresh(statePath: string, trustMinutes = env.authTrustMinutes): boolean {
+    if (trustMinutes <= 0) return false
+    const ageMs = Date.now() - statSync(statePath).mtimeMs
+    return ageMs >= 0 && ageMs < trustMinutes * 60_000
 }

@@ -1,8 +1,50 @@
 import { browser, driver } from '@wdio/globals'
-import { TIMEOUT } from '../config/timeouts'
+import { SHORT_TIMEOUT, TIMEOUT } from '../config/timeouts'
 
-/** What every screen shares: typing into the Flutter app's text fields. Screens extend this class. */
+/** What every screen shares: app resets and typing into the Flutter app's text fields. Screens extend this class. */
 export default abstract class BaseScreen {
+    /** The app package under test (APP_PACKAGE in .env). */
+    protected readonly appPackage = process.env.APP_PACKAGE || 'com.ezycourse.ezycourse'
+
+    /**
+     * Answers whether the element shows up within a SHORT wait, false instead of throwing.
+     * Use it for "is this screen/state showing?" questions where "no" is a normal answer, so the test
+     * does not burn the full TIMEOUT on something that is not there.
+     */
+    protected async isShownSoon(getElement: () => ChainablePromiseElement, timeout = SHORT_TIMEOUT): Promise<boolean> {
+        return getElement()
+            .waitForDisplayed({ timeout })
+            .then(
+                () => true,
+                () => false
+            )
+    }
+
+    /**
+     * Back to a known state WITHOUT a new Appium session: kill and relaunch the app (about 1 s; app data and
+     * the saved login stay). Use it in beforeEach instead of browser.reloadSession() (10-15 s).
+     */
+    async relaunchApp() {
+        await driver.terminateApp(this.appPackage)
+        await driver.activateApp(this.appPackage)
+    }
+
+    /**
+     * Like a fresh install, WITHOUT a new Appium session: kill the app, clear its data (so it starts logged out,
+     * on the login screen), grant its permissions again (clearing drops them) and relaunch it. A few seconds
+     * instead of the 10-15 s of browser.reloadSession() with noReset off.
+     */
+    async startClean() {
+        await driver.terminateApp(this.appPackage)
+        await driver.execute('mobile: clearApp', { appId: this.appPackage })
+        await driver.execute('mobile: changePermissions', {
+            appPackage: this.appPackage,
+            action: 'grant',
+            permissions: 'all',
+        })
+        await driver.activateApp(this.appPackage)
+    }
+
     // This is a Flutter app, so two normal WebdriverIO habits don't work here:
     //  1. setValue() only changes the native text; the app's own form never sees it.
     //  2. Clicking the middle of the element can miss the real input, because

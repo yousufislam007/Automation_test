@@ -34,7 +34,7 @@ Run one test: `npx playwright test -g "HOME-01"`.
 
 Copy `.env.example` to `.env` and fill in `WEB_BASE_URL` (must be `https://sqa.ezycommunity.pro.bd`), `WEB_ADMIN_EMAIL`, `WEB_ADMIN_PASSWORD`,
 `WEB_MEMBER_EMAIL`, `WEB_MEMBER_PASSWORD`. Then `npm install` and `npx playwright install chromium`.
-Optional: `PLAYWRIGHT_WORKERS` (default 1), `PLAYWRIGHT_SLOW_MO` (ms between actions, for `--headed`), `REQUEST_MIN_INTERVAL_MS`, `AUTH_REFRESH=1`, `LOGIN_BUDGET_MAX` (8), `LOGIN_BUDGET_WINDOW_MIN` (15).
+Optional: `PLAYWRIGHT_WORKERS` (default 3; set 1 on HTTP 429), `AUTH_TRUST_MIN` (20: a session checked less than that many minutes ago is trusted without a page load), `PLAYWRIGHT_TRACE=1` (keep a trace per failure; off by default, ~10% per test), `PLAYWRIGHT_SLOW_MO` (ms between actions, for `--headed`), `REQUEST_MIN_INTERVAL_MS`, `AUTH_REFRESH=1`, `LOGIN_BUDGET_MAX` (8), `LOGIN_BUDGET_WINDOW_MIN` (15).
 
 ## Structure
 
@@ -79,7 +79,7 @@ Not measured yet. Assume the same login limit as EzyCourse until proven otherwis
 - Use `uniqueName('TC ...')` for anything a test creates.
 - Use clear test names with a unique ID: "HOME-01: should load the start page".
 - Tag test groups with `{ tag: '@name' }` (`@smoke`, ...).
-- Screenshot and trace are saved automatically on failure (`test-results/`, `playwright-report/`).
+- A screenshot is saved automatically on failure (`test-results/`, `playwright-report/`); a trace too when `PLAYWRIGHT_TRACE=1`.
 - Do not hardcode credentials. Never print cookies, tokens, emails or passwords. Read credentials from `.env`.
 - Only `https://sqa.ezycommunity.pro.bd`: assert it (`expectOnAllowedCommunity()`) before every destructive change; never switch community without the owner's permission.
 - Never retry actions that create, change or send something.

@@ -13,8 +13,15 @@ export const siteSession: SiteSession = {
     mapped: true,
     checkUrl: '/feeds',
     async isLoggedIn(page) {
-        await page.waitForLoadState('networkidle').catch(() => {})
-        return (await page.getByRole('button', { name: 'Open profile menu' }).count()) > 0
+        // Wait for whichever appears first (no "networkidle": the feed keeps polling, which made this take long).
+        const profileMenu = page.getByRole('button', { name: 'Open profile menu' })
+        const logIn = page.getByRole('link', { name: 'Log in' }).or(page.getByRole('button', { name: 'Log in' }))
+        await profileMenu
+            .or(logIn)
+            .first()
+            .waitFor({ timeout: 20_000 })
+            .catch(() => {})
+        return (await profileMenu.count()) > 0
     },
     async login(page, account) {
         const loginPage = new LoginPage(page)

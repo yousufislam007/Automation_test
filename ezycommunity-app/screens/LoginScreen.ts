@@ -9,6 +9,9 @@ export default class LoginScreen extends BaseScreen {
     private readonly passwordField = () =>
         $('android=new UiSelector().className("android.widget.EditText").instance(1)')
     private readonly signInButton = () => $('~Sign in')
+    // Second checkbox on the form: 'I agree to the Terms of Service and Privacy Policy' (the first is 'Remember me').
+    private readonly termsCheckbox = () =>
+        $('android=new UiSelector().className("android.widget.CheckBox").instance(1)')
     // The home screen: header with the community name and the "Home" tab.
     // "Home" exists twice (top tab and bottom bar): take the first.
     private readonly homeTab = () => $('android=new UiSelector().description("Home").instance(0)')
@@ -21,9 +24,9 @@ export default class LoginScreen extends BaseScreen {
             .catch(() => false)
     }
 
-    /** True when the login screen is showing (the app was logged out). */
+    /** True when the login screen shows up within a short wait (the app was logged out); false when logged in. */
     async isShown(): Promise<boolean> {
-        return this.welcome().isDisplayed()
+        return this.isShownSoon(this.welcome)
     }
 
     /**
@@ -34,8 +37,15 @@ export default class LoginScreen extends BaseScreen {
         await this.waitUntilShown(this.emailField)
         await this.typeInto(this.emailField, email)
         await this.typeInto(this.passwordField, password, true)
+        await this.acceptTermsIfNeeded()
         this.beforeRealLogin()
         await this.signInButton().click()
+    }
+
+    /** The Terms checkbox is unchecked after a logout; Sign in does nothing (client-side) until it is ticked. */
+    private async acceptTermsIfNeeded() {
+        const box = this.termsCheckbox()
+        if ((await box.isExisting()) && (await box.getAttribute('checked')) !== 'true') await box.click()
     }
 
     /** Waits for the home screen of the SQA Team community (not just any screen). */

@@ -33,7 +33,9 @@ Then `npm install` and `npx playwright install chromium`.
 
 ## Settings (environment variables, see `.env.example`)
 
-- `PLAYWRIGHT_WORKERS` (default **1**): number of parallel workers. Raise it slowly, see rate limits.
+- `PLAYWRIGHT_WORKERS` (default **3**): number of parallel workers; page loads stay spaced out by the shared limiter. Set 1 if the site answers HTTP 429.
+- `AUTH_TRUST_MIN` (default 20): a saved session checked less than this many minutes ago is trusted without a page load (saves ~5 s per run; 0 = always check).
+- `PLAYWRIGHT_TRACE=1`: record a trace for every test and keep it on failure (off by default, costs ~10% per test; screenshots on failure are always on).
 - `REQUEST_MIN_INTERVAL_MS` (default 0 for 1 worker, 1000 for more): minimum gap between page loads across ALL workers.
 - `PLAYWRIGHT_SLOW_MO`: milliseconds to wait between actions, for watching a `--headed` run.
 - `AUTH_REFRESH=1`: force a fresh login even if the saved session is valid.

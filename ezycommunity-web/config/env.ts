@@ -56,7 +56,9 @@ function baseUrl(): string {
     return ALLOWED_ORIGIN
 }
 
-const workers = wholeNumber('PLAYWRIGHT_WORKERS', 1, 1)
+// Default 3 workers: page loads stay spaced out by the shared limiter (minRequestIntervalMs).
+// Set PLAYWRIGHT_WORKERS=1 if the site starts answering HTTP 429.
+const workers = wholeNumber('PLAYWRIGHT_WORKERS', 3, 1)
 
 export const env = {
     // Read on use, so importing this file does not fail when .env is missing.
@@ -76,7 +78,6 @@ export const env = {
         return required('WEB_MEMBER_PASSWORD')
     },
 
-    // Conservative default: ONE worker until the site's rate limits are understood.
     workers,
     /**
      * Minimum gap between page loads across ALL workers (shared limiter).
@@ -85,6 +86,13 @@ export const env = {
     minRequestIntervalMs: wholeNumber('REQUEST_MIN_INTERVAL_MS', workers > 1 ? 1000 : 0),
     /** AUTH_REFRESH=1 forces a fresh login even when the saved session is still valid. */
     forceAuthRefresh: optional('AUTH_REFRESH') === '1',
+    /**
+     * A saved session checked (or created) less than this many minutes ago is trusted without opening the site
+     * again (saves a browser start and a page load, about 5 s, on every run). 0 = always check.
+     */
+    authTrustMinutes: wholeNumber('AUTH_TRUST_MIN', 20),
+    /** PLAYWRIGHT_TRACE=1 records a trace for every test and keeps it on failure (costs about 10% per test). */
+    traceOnFailure: optional('PLAYWRIGHT_TRACE') === '1',
     /** Real logins allowed per window before the tests refuse to log in again (the site allows about 10). */
     loginBudgetMax: wholeNumber('LOGIN_BUDGET_MAX', 8, 1),
     /** Length of that window in minutes (the site blocks for about 10-15 minutes). */

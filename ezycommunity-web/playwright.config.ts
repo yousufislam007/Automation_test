@@ -8,7 +8,7 @@ export default defineConfig({
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 1 : 0,
-    // One worker by default. Raise it with PLAYWRIGHT_WORKERS once the site's rate limits are understood.
+    // 3 workers by default (PLAYWRIGHT_WORKERS); page loads are spaced out by the shared limiter.
     workers: env.workers,
 
     timeout: 60_000,
@@ -21,7 +21,8 @@ export default defineConfig({
         actionTimeout: 15_000,
         navigationTimeout: 30_000,
         screenshot: 'only-on-failure',
-        trace: 'retain-on-failure',
+        // Tracing every test costs about 10%: off by default, PLAYWRIGHT_TRACE=1 keeps a trace of each failure.
+        trace: env.traceOnFailure ? 'retain-on-failure' : 'on-first-retry',
         // PLAYWRIGHT_SLOW_MO=400 makes a --headed run easy to follow.
         launchOptions: { slowMo: env.slowMoMs },
     },

@@ -1,5 +1,5 @@
 import { browser, driver } from '@wdio/globals'
-import { TIMEOUT } from '../config/timeouts'
+import { SHORT_TIMEOUT, TIMEOUT } from '../config/timeouts'
 import { assertLoginBudget, recordLogin, recordLoginBlocked } from '../utils/login-budget'
 
 /**
@@ -10,6 +10,32 @@ import { assertLoginBudget, recordLogin, recordLoginBlocked } from '../utils/log
 export default abstract class BaseScreen {
     protected async waitUntilShown(getElement: () => ChainablePromiseElement) {
         await getElement().waitForDisplayed({ timeout: TIMEOUT })
+    }
+
+    /**
+     * Answers whether the element shows up within a SHORT wait, false instead of throwing.
+     * Use it for "is this screen/state showing?" questions where "no" is a normal answer, so the test
+     * does not burn the full TIMEOUT on something that is not there.
+     */
+    protected async isShownSoon(getElement: () => ChainablePromiseElement, timeout = SHORT_TIMEOUT): Promise<boolean> {
+        return getElement()
+            .waitForDisplayed({ timeout })
+            .then(
+                () => true,
+                () => false
+            )
+    }
+
+    /** The app package under test (APP_PACKAGE in .env). */
+    protected readonly appPackage = process.env.APP_PACKAGE || 'com.ezycommunity.android'
+
+    /**
+     * Puts the app back to a known state WITHOUT a new Appium session: kill and relaunch it (2-3 s, the saved login
+     * stays). Use this in beforeEach instead of browser.reloadSession(), which rebuilds the whole session (10-15 s).
+     */
+    async relaunchApp() {
+        await driver.terminateApp(this.appPackage)
+        await driver.activateApp(this.appPackage)
     }
 
     /**
@@ -42,7 +68,8 @@ export default abstract class BaseScreen {
     // then read the text back to prove it arrived. For password fields only the length is checked (masked).
     protected async typeInto(getField: () => ChainablePromiseElement, text: string, isPassword = false) {
         await getField().waitForDisplayed({ timeout: TIMEOUT })
-        if (!isPassword && (await getField().getText()).length > 0) await this.clearField(getField)
+        // Clear a pre-filled value (e.g. "Remember me" keeps the last email and password): the password too.
+        if ((await getField().getText()).length > 0) await this.clearField(getField)
 
         const arrived = async () => {
             const actual = await getField().getText()

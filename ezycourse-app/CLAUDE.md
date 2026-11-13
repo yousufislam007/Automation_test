@@ -17,6 +17,8 @@ The Playwright web project in the parent folder is separate; its lint/format/typ
 | `npm test`                                                                  | All specs (starts Appium itself; the emulator must be running)       |
 | `npm run test:login`                                                        | The login spec (12 tests; 5 send a real login request, see Limits)   |
 | `npm run test:courses`                                                      | The Courses tab spec (CRS-01..07; ONE real login; CRS-02 and CRS-03 skip until `test-data/courses.ts` has their data) |
+| `npm run appium`                                                            | **Fast runs:** keep one Appium server running in its own terminal; every `wdio run` then reuses it (about 10 s less per run) |
+| `npm run test:watch -- --spec <file>`                                       | **While writing tests:** keeps the worker and the Appium session open and re-runs the spec when you save it (about 5 s per re-run) |
 | `npm run check`                                                             | **Run before finishing any change:** type-check + lint + format check |
 | `npm run typecheck` / `lint` / `lint:fix` / `format` / `format:check`       | The single checks, and the fixers                                    |
 
@@ -51,7 +53,8 @@ Then `npm install`, start the emulator, run a test.
   from `@wdio/globals` or calls `browser.$()`. Put the locator, or a method that uses it, in a screen under `screens/`.
 - Locator priority: accessibility id (`~id`) > resource-id > UiAutomator > XPath (last resort).
 - Never use fixed sleeps (`browser.pause` fails the lint). Use explicit waits (`waitForDisplayed`, `waitUntil`).
-- Every test must be independent and start from a known app state (`browser.reloadSession()` in `beforeEach`).
+- Every test must be independent and start from a known app state, WITHOUT a new Appium session: `startClean()` (data cleared = login screen) or `relaunchApp()` (login kept) in `beforeEach`. `browser.reloadSession()` costs 10-15 s; use it only when a test really needs a fresh session.
+- Speed: start `npm run appium` once and leave it running; sessions skip the helper-app install (`APP_FULL_INIT=1` once after a driver upgrade or on a new device); ask "is X on screen?" with `isShownSoon()` (3 s) instead of a 15 s wait; one Appium session per spec file. Same setup as `../ezycommunity-app` (measured there: session 3.7 s, relaunch 0.8 s). `startClean()` has not been run on a device yet (2026-11-13): watch the first login-spec run.
 - Use clear test names with an ID: "LOGIN-05: should show error when password is wrong". IDs are unique.
 - Take a screenshot on test failure (done in `wdio.conf.ts`).
 - Do not hardcode credentials. Read them from `.env`. Never print them.

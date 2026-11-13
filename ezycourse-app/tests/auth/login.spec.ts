@@ -1,12 +1,12 @@
-import { browser, expect } from '@wdio/globals'
+import { expect } from '@wdio/globals'
 import LoginScreen from '../../screens/LoginScreen'
 import DashboardScreen from '../../screens/DashboardScreen'
 import { env } from '../../config/env'
 
 describe('EzyCourse Login', () => {
     beforeEach(async () => {
-        // Fresh session = app data cleared, so every test starts on the login screen.
-        await browser.reloadSession()
+        // App data cleared (no new Appium session), so every test starts on the login screen.
+        await LoginScreen.startClean()
         await LoginScreen.waitUntilLoaded()
     })
 
