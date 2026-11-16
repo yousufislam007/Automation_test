@@ -8,6 +8,8 @@ export const androidCapabilities = {
     platformName: 'Android',
     'appium:automationName': 'UiAutomator2',
     'appium:deviceName': setting('ANDROID_DEVICE_NAME', 'emulator-5554'),
+    // Pin the exact device: with two devices attached Appium may otherwise pick the emulator.
+    'appium:udid': setting('ANDROID_DEVICE_NAME', 'emulator-5554'),
     'appium:platformVersion': setting('ANDROID_PLATFORM_VERSION', '17'),
     'appium:appPackage': setting('APP_PACKAGE', 'com.ezycourse.ezycourse'),
     'appium:appActivity': setting('APP_ACTIVITY', '.EzyAudioServiceActivity'),
