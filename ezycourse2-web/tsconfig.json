@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "target": "es2024",
+    "lib": ["es2024", "dom"],
+    "types": ["node"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["config", "pages", "playwright", "tests", "test-data", "utils", "playwright.config.ts"]
+}
