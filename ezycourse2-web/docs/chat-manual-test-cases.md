@@ -96,3 +96,30 @@ Tip: the login API is rate limited. Log in once per account and keep the browser
 
 ## Not covered
 Voice and video messages, large files, group DMs, notification emails, moderator role, "Decline" for join requests, Manage > Activity logs.
+
+## Re-check 2026-11-24 (school ezyyousuf-hqtm4o, admin + User1)
+
+Status of earlier reports. "Not re-checked" = no new evidence this run.
+
+| Earlier report | Status now | Notes |
+| --- | --- | --- |
+| A-05 stale link after room rename ("Conversation not found") | **Still a bug** | Admin: URL stays on the old slug, "Conversation not found", reload does not fix it. Student side opens the new slug and sees the new name live (within ~20 s). |
+| Admin cannot delete members' messages | **Fixed** | Admin "Message actions" on a member's message now offers Save / Pin / **Delete message**. |
+| Private room visible to non-members | **Still present** | Student sees "QA Secret Room" and "Private room" in the list; opening shows "Private", "Join room" button. Possibly by design (owner question). |
+| Admin Ctrl/Cmd+K search | **Still dead** | Ctrl+K opens nothing. |
+| Create room, send, student join, student message | Pass | Regression of the basics. |
+| DM-off footer text, banned user "Join room", over-limit draft erase, 0-byte upload label, @everyone by Team member, moderator permissions, deleted file URL, admin header badge | Not re-checked | Ban test blocked: could not find the Room info members button. |
+
+Cleanup: test room "QA Regress A Renamed" deleted from Manage > Chat.
+
+### Re-check 2026-11-24, part 2 (owner said these are fixed)
+
+| Reported issue | Status now | Evidence |
+| --- | --- | --- |
+| Admin has no Delete option for members' messages | **Fixed** | Admin menu on a member's message shows Delete message. |
+| Moderator cannot pin any message | **Fixed** | Moderator pinned the admin's message; it shows "Pinned" and the Pinned count went up. Moderator menu on others' messages: Save / Pin / Delete. |
+| Moderator cannot ban members | **Fixed** | Room info shows an actions menu with Ban next to a regular member (not next to Team members); ban confirm text correct; member left the room (3 -> 2). |
+| `@everyone` does not work for custom role with full chat permissions | **Looks fixed (not fully proven)** | Moderator's `@everyone` message raised the admin's Mentions count to 1. The message text is plain in the DOM for admin and moderator alike, so only the Mentions count shows it worked. No custom role other than Moderator was available to test. |
+| Banned user still sees "Join room" button | **Still present** | Banned student sees the Join room button; clicking shows "You are banned from this room." (so it is blocked, but the button is misleading). |
+
+Cleanup: room "QA Regress B" deleted (bans went with it).
